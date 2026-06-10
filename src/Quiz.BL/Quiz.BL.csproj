@@ -11,4 +11,9 @@
     <ProjectReference Include="..\Quiz.Shared\Quiz.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Abstractions\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
