@@ -4,7 +4,7 @@ using MySqlConnector;
 using System.Data;
 
 namespace Quiz.DL.Service;
-internal abstract class DbConnectionManager
+public abstract class DbConnectionManager
 {
     private IConfiguration _configuration;
     private ILogger<DbConnectionManager> _logger;
