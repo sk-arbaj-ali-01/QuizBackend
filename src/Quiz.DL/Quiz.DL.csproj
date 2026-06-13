@@ -17,8 +17,4 @@
     <ProjectReference Include="..\Quiz.Shared\Quiz.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Parameters\" />
-  </ItemGroup>
-
 </Project>

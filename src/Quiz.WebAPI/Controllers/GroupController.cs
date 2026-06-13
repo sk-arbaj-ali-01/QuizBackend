@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Quiz.BL.Abstractions;
 using Quiz.Shared.DTO.Group.Request;
+using Quiz.Shared.DTO.Group.Response;
+using Quiz.Shared.Models;
 
 namespace Quiz.WebAPI.Controllers;
 
@@ -16,5 +18,15 @@ public class GroupController(
         await groupService.CreateGroup(requestDto);
 
         return Ok();
+    }
+
+    [HttpGet]
+    [ProducesResponseType<PaginatedResponse<GroupResponseDto>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetGroups([FromQuery] GroupRequestDto requestDto)
+    {
+        PaginatedResponse<GroupResponseDto> response = 
+            await groupService.GetGroups(requestDto);
+
+        return Ok(response);
     }
 }
