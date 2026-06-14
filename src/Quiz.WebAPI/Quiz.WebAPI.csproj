@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Quiz.DbMigration\Quiz.DbMigration.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
