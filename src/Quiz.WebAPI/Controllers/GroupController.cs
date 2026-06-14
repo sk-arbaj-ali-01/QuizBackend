@@ -12,7 +12,7 @@ public class GroupController(
     IGroupService groupService) : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateGroup([FromBody] GroupCreateRequestDto requestDto)
     {
         await groupService.CreateGroup(requestDto);
@@ -28,5 +28,33 @@ public class GroupController(
             await groupService.GetGroups(requestDto);
 
         return Ok(response);
+    }
+
+    [HttpGet("{groupId:Guid}")]
+    [ProducesResponseType<GroupResponseDto>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetGroupById([FromRoute] Guid groupId)
+    {
+        GroupResponseDto response =
+            await groupService.GetGroupById(groupId);
+
+        return Ok(response);
+    }
+
+    [HttpPut("{groupId:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> UpdateGroupById([FromRoute] Guid groupId, [FromBody] GroupUpdateRequestDto requestDto) 
+    { 
+        await groupService.UpdateGroupById(groupId, requestDto); 
+
+        return Ok();
+    }
+
+    [HttpDelete("{groupId:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> DeleteGroupById([FromRoute] Guid groupId)
+    {
+        await groupService.DeleteGroupById(groupId);
+
+        return Ok();
     }
 }

@@ -44,6 +44,39 @@ public class GroupRepository(
         };
     }
 
+    public async Task<GroupResponseDto> GetGroupById(Guid groupId)
+    {
+        GroupResponseDto response =
+            await DbOperation(async conn =>
+                await conn.QuerySingleAsync<GroupResponseDto>(
+                    GroupSqlQueries.GetGroupByIdQuery,
+                    new
+                    {
+                        GroupId = groupId
+                    }));
+
+        return response;
+    }
+
+    public async Task UpdateGroupById(GroupEntity groupEntity)
+    {
+        await DbOperation(async conn =>
+            await conn.ExecuteAsync(
+                GroupSqlQueries.UpdateGroupById,
+                groupEntity));
+    }
+
+    public async Task DeleteGroupById(Guid groupId)
+    {
+        await DbOperation(async conn =>
+            await conn.ExecuteAsync(
+                GroupSqlQueries.DeleteGroupById,
+                new
+                {
+                    GroupId = groupId
+                }));
+    }
+
     private string BuildQuery(GroupParameter parameter, out DynamicParameters dynamicParameters)
     {
         StringBuilder sqlBuilder = new StringBuilder(GroupSqlQueries.GetGroupsQuery);

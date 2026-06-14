@@ -9,4 +9,9 @@ public interface IGroupService
 
     Task<PaginatedResponse<GroupResponseDto>> GetGroups(GroupRequestDto reqDto);
 
+    Task<GroupResponseDto> GetGroupById(Guid groupId);
+
+    Task UpdateGroupById(Guid groupId, GroupUpdateRequestDto reqDto);
+
+    Task DeleteGroupById(Guid groupId);
 }
