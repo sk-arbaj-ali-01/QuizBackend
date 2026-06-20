@@ -1,4 +1,5 @@
 ﻿using Quiz.BL.Abstractions;
+using Quiz.BL.Abstractions;
 using Quiz.BL.Services;
 using Quiz.DbMigration.Abstraction;
 using Quiz.DbMigration.Service;
@@ -24,6 +25,7 @@ public static class ServiceRegisterExtensions
         this IServiceCollection services)
     {
         services.AddScoped<IGroupService, GroupService>();
+        services.AddScoped<IQuestionService, QuestionService>();
 
         return services;
     }
@@ -32,6 +34,7 @@ public static class ServiceRegisterExtensions
         this IServiceCollection services)
     {
         services.AddScoped<IGroupRepository, GroupRepository>();
+        services.AddScoped<IQuestionRepository, QuestionRepository>();
 
         return services;
     }

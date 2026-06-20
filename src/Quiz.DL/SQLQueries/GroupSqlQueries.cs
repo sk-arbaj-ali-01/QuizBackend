@@ -9,6 +9,7 @@ public static class GroupSqlQueries
             description,
             is_active,
             active_for_days,
+            exam_duration,
             created_by
         )
         VALUES
@@ -18,6 +19,7 @@ public static class GroupSqlQueries
             @Description,
             @IsActive,
             @ActiveForDays,
+            @ExamDuration,
             @CreatedBy
         )    
     ";
@@ -29,7 +31,9 @@ public static class GroupSqlQueries
             description     AS Description,
             is_active       AS IsActive,
             is_archived     AS IsArchived,
-            created_at      AS CreatedAt
+            exam_duration   AS ExamDuration,
+            created_at      AS CreatedAt,
+            active_for_days AS ActiveForDays
         FROM question_groups  
     ";
 
@@ -39,7 +43,9 @@ public static class GroupSqlQueries
         group_name      AS GroupName,
         description     AS Description,
         is_active       AS IsActive,
-        is_archived     AS IsArchieved
+        is_archived     AS IsArchieved,
+        exam_duration   AS ExamDuration,
+        active_for_days AS ActiveForDays
     FROM question_groups
     WHERE group_id = @GroupId
     ";
@@ -51,6 +57,7 @@ public static class GroupSqlQueries
             description = @Description,
             is_active = @IsActive,
             is_archived = @IsArchived,
+            exam_duration = @ExamDuration,
             modified_at = CURRENT_TIMESTAMP
         WHERE
             group_id = @GroupId

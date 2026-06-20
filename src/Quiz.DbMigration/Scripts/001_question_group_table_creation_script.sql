@@ -5,6 +5,7 @@ CREATE TABLE `question_groups` (
     `is_active` BOOLEAN NOT NULL DEFAULT FALSE,
     `is_archived` BOOLEAN NOT NULL DEFAULT FALSE,
     `active_for_days` INT,
+    `exam_duration` INT NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` CHAR(36) NOT NULL,
     `modified_at` TIMESTAMP,
