@@ -35,4 +35,16 @@ public static class UserSqlQueries
         FROM users
         WHERE user_id = @UserId
     ";
+
+    public const string GetUserDeatilsByEmail = @"
+        SELECT
+            user_id     AS UserId,
+            full_name   AS FullName,
+            email_id    AS EmailId,
+            role        AS Role,
+            password    AS Password
+        FROM users
+        WHERE
+            email_id = @Email
+    ";
 }

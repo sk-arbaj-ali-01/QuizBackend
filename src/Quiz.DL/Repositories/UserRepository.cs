@@ -5,6 +5,7 @@ using Quiz.DL.Abstractions;
 using Quiz.DL.Entities;
 using Quiz.DL.Service;
 using Quiz.DL.SQLQueries;
+using Quiz.Shared.DTO.User.Response;
 using Quiz.Shared.Models;
 
 namespace Quiz.DL.Repositories;
@@ -30,6 +31,20 @@ public class UserRepository(
                 {
                     UserId = userId
                 }));
+
+        return response;
+    }
+
+    public async Task<UserLoginResponseDto?> Login(UserLoginEntity entity)
+    {
+        var response = await DbOperation(async connection =>
+            await connection.QueryFirstOrDefaultAsync<UserLoginResponseDto>(
+                UserSqlQueries.GetUserDeatilsByEmail,
+                new
+                {
+                    Email = entity.Email.ToString()
+                })
+            );
 
         return response;
     }

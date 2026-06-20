@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Isopoh.Cryptography.Argon2" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Quiz.DL\Quiz.DL.csproj" />
     <ProjectReference Include="..\Quiz.Shared\Quiz.Shared.csproj" />
   </ItemGroup>

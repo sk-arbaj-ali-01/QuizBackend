@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Quiz.BL.Abstractions;
+using Quiz.Shared.DTO.User.Request;
 using Quiz.Shared.Models;
 
 namespace Quiz.WebAPI.Controllers;
@@ -23,6 +24,16 @@ public class UserController(
     public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
     {
         UserResponseDto? response = await userService.GetUserById(userId);
+
+        return Ok(response);
+    }
+
+    [HttpPost("login")]
+    [ProducesResponseType<LoginDetails>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Login([FromBody] UserLoginRequestDto reqDto)
+    {
+        LoginDetails? response = await userService.Login(reqDto);
 
         return Ok(response);
     }
