@@ -10,4 +10,6 @@ public class GroupUpdateRequestDto
     public bool IsArchived { get; set; }
 
     public int ActiveForDays { get; set; }
+
+    public int ExamDuration { get; set; }
 }

@@ -11,5 +11,9 @@ public class GroupResponseDto
 
     public bool IsArchived { get; set; }
 
+    public int ExamDuration { get; set; }
+
     public DateTime CreatedAt { get; set; }
+
+    public int ActiveForDays { get; set; }
 }

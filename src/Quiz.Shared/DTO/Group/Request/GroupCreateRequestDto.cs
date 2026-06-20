@@ -8,4 +8,6 @@ public class GroupCreateRequestDto
     public bool IsActive { get; set; }
 
     public int ActiveForDays { get; set; }
+
+    public int ExamDuration { get; set; }
 }

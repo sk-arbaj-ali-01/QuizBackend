@@ -11,5 +11,7 @@ public class GroupEntity : BaseEntity
 
     public int ActiveForDays { get; set; }
 
+    public int ExamDuration { get; set; }
+
     public bool IsArchived { get; set; }
 }

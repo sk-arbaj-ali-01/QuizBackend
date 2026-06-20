@@ -12,7 +12,8 @@ public static class GroupCreateDtoToGroupEntity
             GroupName = requestDto.GroupName,
             Description = requestDto.Description,
             IsActive = requestDto.IsActive,
-            ActiveForDays = requestDto.ActiveForDays
+            ActiveForDays = requestDto.ActiveForDays,
+            ExamDuration = requestDto.ExamDuration
         };
 
         return entity;

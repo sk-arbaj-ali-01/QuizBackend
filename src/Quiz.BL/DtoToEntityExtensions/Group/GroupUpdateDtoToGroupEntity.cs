@@ -13,6 +13,7 @@ public static class GroupUpdateDtoToGroupEntity
             IsActive = reqDto.IsActive,
             IsArchived = reqDto.IsArchived,
             ActiveForDays = reqDto.ActiveForDays,
+            ExamDuration = reqDto.ExamDuration,
         };
     }
 }
