@@ -14,9 +14,10 @@ public class GroupService(
     ILogger<GroupService> logger,
     IGroupRepository groupRepository) : BaseService, IGroupService
 {
-    public async Task CreateGroup(GroupCreateRequestDto reqDto)
+    public async Task CreateGroup(GroupCreateRequestDto reqDto, string userId)
     {
         GroupEntity entity = reqDto.ConvertToEntity();
+        entity.CreatedBy = Guid.Parse(userId);
 
         await groupRepository.CreateGroup(entity);
     }

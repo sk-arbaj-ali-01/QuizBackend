@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Quiz.BL.Abstractions;
 using Quiz.Shared.DTO.Question.Request;
 using Quiz.Shared.DTO.Question.Response;
@@ -6,7 +7,8 @@ using Quiz.Shared.DTO.Question.Response;
 namespace Quiz.WebAPI.Controllers;
 
 [ApiController]
-[Route("v1/questions")]
+[Route("api/v1/questions")]
+[Authorize]
 public class QuestionController(
     IQuestionService questionService) : ControllerBase
 {

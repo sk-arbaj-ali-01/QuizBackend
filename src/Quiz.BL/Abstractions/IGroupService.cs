@@ -5,7 +5,7 @@ using Quiz.Shared.Models;
 namespace Quiz.BL.Abstractions;
 public interface IGroupService
 {
-    Task CreateGroup(GroupCreateRequestDto reqDto);
+    Task CreateGroup(GroupCreateRequestDto reqDto, string userId);
 
     Task<PaginatedResponse<GroupResponseDto>> GetGroups(GroupRequestDto reqDto);
 

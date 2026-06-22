@@ -1,21 +1,15 @@
+using Quiz.Shared.Models;
 using Quiz.WebAPI.ExtensionServices;
+using Quiz.WebAPI.Middlewares;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-    });
-});
+builder.Services.AddServicesToCollection(builder);
 
-builder.Services.AddServicesToCollection();
+builder.Services.AddScoped<ExceptionHandler>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -27,6 +21,8 @@ var app = builder.Build();
 //if (app.Environment.IsDevelopment())
 //{
 //}
+app.UseMiddleware<ExceptionHandler>();
+
 app.MapOpenApi();
 app.MapScalarApiReference();
 
