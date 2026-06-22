@@ -8,6 +8,7 @@ using Quiz.DL.Repositories;
 using Quiz.Shared.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Security.Claims;
 
 namespace Quiz.WebAPI.ExtensionServices;
 
@@ -22,7 +23,8 @@ public static class ServiceRegisterExtensions
             .AddDatabaseLayerRepositories()
             .AddCorsPolicies()
             .AddPoliciesAndOptions(builder)
-            .AddAuthenticationServices(builder);
+            .AddAuthenticationServices(builder)
+            .AddAuthorizationService();
 
         return services;
     }
@@ -101,6 +103,19 @@ public static class ServiceRegisterExtensions
                     ClockSkew = TimeSpan.FromSeconds(30)
                 };
             });
+        return services;
+    }
+
+    private static IServiceCollection AddAuthorizationService(this IServiceCollection services)
+    {
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("Teacher", policy =>
+            {
+                policy.RequireClaim(ClaimTypes.Role, "TEACHER");
+            });
+        });
+
         return services;
     }
 }

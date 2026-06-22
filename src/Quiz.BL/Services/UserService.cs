@@ -82,6 +82,7 @@ public class UserService(
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
+            //Expires = DateTime.UtcNow.AddSeconds(30),
             Expires = DateTime.UtcNow.AddMinutes(options.Expiry),
             Issuer = options.Issuer,
             Audience = options.Audience,
@@ -98,6 +99,25 @@ public class UserService(
         {
             AccessToken = token,
             Role = response.Role,
+            Expires = tokenDescriptor.Expires.Value
         };
+    }
+
+    public async Task<PagedRecordModel<UserTeacherResponseDto>> GetTeachersData()
+    {
+        return await userRepository.GetTeachersData();
+    }
+
+    public async Task CreateRelationBetweenStudentAndTeacher(Guid studentId, Guid teacherId)
+    {
+        bool exists = await userRepository.CheckIfStudentAndTeacherDataAlreadyExists(studentId, teacherId);
+
+        if (exists)
+        {
+            logger.LogInformation("Student:{studentId} is already associated with Teacher:{teacherId}", studentId, teacherId);
+            throw new RecordAlreadyExistsException("Student is already associated with teacher");
+        }
+
+        await userRepository.CreateRelationBetweenStudentAndTeacher(studentId, teacherId);
     }
 }

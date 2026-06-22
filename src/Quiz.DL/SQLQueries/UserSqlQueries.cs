@@ -1,3 +1,5 @@
+using Quiz.Shared.Enums;
+
 namespace Quiz.DL.SQLQueries;
 public static class UserSqlQueries
 {
@@ -46,5 +48,37 @@ public static class UserSqlQueries
         FROM users
         WHERE
             email_id = @Email
+    ";
+
+    public const string GetTeachersData = @"
+        SELECT
+            user_id         AS UserId,
+            full_name       AS FullName
+        FROM
+            users
+        WHERE
+            role = 'TEACHER'
+    ";
+
+    public const string CreateStudentAndTeacherData = @"
+        INSERT INTO rel_student_teacher
+        (
+            student_id,
+            teacher_id
+        )
+        VALUES
+        (
+            @StudentId,
+            @TeacherId
+        )
+    ";
+
+    public const string CheckIfStudentAndTeacherDataAlreadyExists = @"
+        SELECT
+            TRUE
+        FROM rel_student_teacher
+        WHERE
+            student_id = @StudentId
+            AND teacher_id = @TeacherId
     ";
 }

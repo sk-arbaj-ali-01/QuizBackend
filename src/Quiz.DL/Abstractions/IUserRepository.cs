@@ -10,4 +10,10 @@ public interface IUserRepository
     Task<UserResponseDto?> GetUserById(Guid userId);
 
     Task<UserLoginResponseDto?> Login(UserLoginEntity entity);
+
+    Task<PagedRecordModel<UserTeacherResponseDto>> GetTeachersData();
+
+    Task CreateRelationBetweenStudentAndTeacher(Guid studentId, Guid teacherId);
+
+    Task<bool> CheckIfStudentAndTeacherDataAlreadyExists(Guid studentId, Guid teacherId);
 }

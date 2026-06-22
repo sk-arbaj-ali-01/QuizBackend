@@ -1,7 +1,6 @@
 using Isopoh.Cryptography.Argon2;
 using Quiz.DL.Entities;
 using Quiz.Shared.DTO.User.Request;
-using Quiz.Shared.Models;
 
 namespace Quiz.BL.DtoToEntityExtensions.User;
 public static class UserCreateDtoToUserEntity

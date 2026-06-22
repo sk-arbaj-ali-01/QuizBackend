@@ -48,4 +48,45 @@ public class UserRepository(
 
         return response;
     }
+
+    public async Task<PagedRecordModel<UserTeacherResponseDto>> GetTeachersData()
+    {
+        IEnumerable<UserTeacherResponseDto> results =
+            await DbOperation(async connection =>
+                await connection.QueryAsync<UserTeacherResponseDto>(
+                    UserSqlQueries.GetTeachersData)
+                );
+
+        return new PagedRecordModel<UserTeacherResponseDto>
+        {
+            Records = results,
+            TotalCount = results.Count()
+        };
+    }
+
+    public async Task CreateRelationBetweenStudentAndTeacher(Guid studentId, Guid teacherId)
+    {
+        await DbOperation(async conn =>
+            await conn.ExecuteAsync(
+                UserSqlQueries.CreateStudentAndTeacherData,
+                new
+                {
+                    StudentId = studentId,
+                    TeacherId = teacherId
+                })
+            );
+    }
+
+    public async Task<bool> CheckIfStudentAndTeacherDataAlreadyExists(Guid studentId, Guid teacherId)
+    {
+        return await DbOperation(async conn =>
+            await conn.QueryFirstOrDefaultAsync<bool>(
+                UserSqlQueries.CheckIfStudentAndTeacherDataAlreadyExists,
+                new
+                {
+                    StudentId = studentId,
+                    TeacherId = teacherId
+                })
+            );
+    }
 }
