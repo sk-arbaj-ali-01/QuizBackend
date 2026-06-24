@@ -1,6 +1,7 @@
 ﻿using Quiz.DL.Entities;
 using Quiz.DL.Parameters;
 using Quiz.Shared.DTO.Group.Response;
+using Quiz.Shared.DTO.Student.Response;
 using Quiz.Shared.Models;
 
 namespace Quiz.DL.Abstractions;
