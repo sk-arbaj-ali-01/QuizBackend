@@ -314,4 +314,12 @@ public static class QuestionSqlQueries
         WHERE question_group_id = @QuestionGroupId
             AND question_id IN @QuestionIds;
     ";
+
+    public const string UpdatePointsForGroupWhileCreatingTheQuestions = @"
+        UPDATE TABLE question_groups
+        SET
+            table_points = @TotalPoints
+        WHERE
+            group_id = @GroupId
+    ";
 }

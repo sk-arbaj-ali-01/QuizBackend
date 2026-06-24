@@ -5,6 +5,7 @@ using Quiz.DL.Abstractions;
 using Quiz.DL.Entities;
 using Quiz.DL.Service;
 using Quiz.DL.SQLQueries;
+using Quiz.Shared.DTO.Question.Request;
 using Quiz.Shared.DTO.Question.Response;
 using System.Data;
 
@@ -17,6 +18,8 @@ public class QuestionRepository(
     public async Task CreateQuestions(QuestionEntity question)
     {
         ArgumentNullException.ThrowIfNull(question);
+
+        int totalPoints = 0;
 
         await DbOperationInTransaction(async (conn, transaction) =>
         {
@@ -33,6 +36,8 @@ public class QuestionRepository(
                         mcqQuestion.Points
                     },
                     transaction);
+
+                totalPoints += mcqQuestion.Points;
 
                 ValidateMcqAnswerIndex(mcqQuestion);
 
@@ -65,6 +70,8 @@ public class QuestionRepository(
                     },
                     transaction);
 
+                totalPoints += msqQuestion.Points;
+
                 HashSet<int> correctOptionIndexes = new(msqQuestion.CorrectAnswer);
 
                 for (int i = 0; i < msqQuestion.Options.Count; i++)
@@ -96,6 +103,8 @@ public class QuestionRepository(
                         trueFalseQuestion.CorrectAnswer
                     },
                     transaction);
+
+                totalPoints += trueFalseQuestion.Points;
             }
 
             foreach (ShortQuestionEntity shortQuestion in question.sa)
@@ -111,7 +120,17 @@ public class QuestionRepository(
                         shortQuestion.Points
                     },
                     transaction);
+
+                totalPoints += shortQuestion.Points;
             }
+
+            await conn.ExecuteAsync(
+                QuestionSqlQueries.UpdatePointsForGroupWhileCreatingTheQuestions,
+                new
+                {
+                    TotalPoints = totalPoints,
+                    question.GroupId
+                }, transaction);
 
             return 1;
         });

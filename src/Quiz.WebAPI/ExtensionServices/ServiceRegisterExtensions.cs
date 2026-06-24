@@ -35,6 +35,7 @@ public static class ServiceRegisterExtensions
         services.AddScoped<IGroupService, GroupService>();
         services.AddScoped<IQuestionService, QuestionService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IStudentService, StudentService>();
 
         return services;
     }
@@ -45,6 +46,7 @@ public static class ServiceRegisterExtensions
         services.AddScoped<IGroupRepository, GroupRepository>();
         services.AddScoped<IQuestionRepository, QuestionRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IStudentRepository, StudentRepository>();
 
         return services;
     }
@@ -113,6 +115,10 @@ public static class ServiceRegisterExtensions
             options.AddPolicy("Teacher", policy =>
             {
                 policy.RequireClaim(ClaimTypes.Role, "TEACHER");
+            });
+            options.AddPolicy("Student", policy =>
+            {
+                policy.RequireClaim(ClaimTypes.Role, "STUDENT");
             });
         });
 
