@@ -10,13 +10,30 @@ public static class QuestionSubmitAnswersDtoToEntity
         {
             GroupId = requestDto.GroupId,
             UserId = userId,
-            Questions = requestDto.Questions.Select(x =>
-                new QuestionAnswerEntity
-                {
-                    QuestionId = x.QuestionId,
-                    QuestionType = x.QuestionType.ToString(),
-                    OptionId = x.OptionId
-                }).ToList()
+            McqAnswers = requestDto.McqAnswers.Select(x => new QuestionMcqAnswerEntity
+            {
+                OptionId = x.OptionId,
+                QuestionId = x.QuestionId,
+                QuestionType = x.QuestionType.ToString(),
+            }).ToList(),
+            MsqAnswers = requestDto.MsqAnswers.Select(x => new QuestionMsqAnswerEntity
+            {
+                OptionIds = x.OptionIds,
+                QuestionId = x.QuestionId,
+                QuestionType = x.QuestionType.ToString(),
+            }).ToList(),
+            TrueFalseAnswers = requestDto.TrueFalseAnswers.Select(x => new QuestionTrueFalseAnswerEntity
+            {
+                Answer = x.Answer,
+                QuestionId = x.QuestionId,
+                QuestionType = x.QuestionType.ToString(),
+            }).ToList(),
+            ShortAnswers = requestDto.ShortAnswers.Select(x => new QuestionShortAnswerAnswerEntity
+            {
+                Answer = x.Answer,
+                QuestionId = x.QuestionId,
+                QuestionType = x.QuestionType.ToString(),
+            }).ToList(),
         };
     }
 }

@@ -36,6 +36,7 @@ public static class ServiceRegisterExtensions
         services.AddScoped<IQuestionService, QuestionService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IStudentService, StudentService>();
+        services.AddScoped<ITeacherService, TeacherService>();
 
         return services;
     }
@@ -47,6 +48,7 @@ public static class ServiceRegisterExtensions
         services.AddScoped<IQuestionRepository, QuestionRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IStudentRepository, StudentRepository>();
+        services.AddScoped<ITeacherRepository, TeacherRepository>();
 
         return services;
     }

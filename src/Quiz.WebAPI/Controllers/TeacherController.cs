@@ -1,0 +1,25 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Quiz.BL.Abstractions;
+using Quiz.Shared.DTO.Teacher.Response;
+using Quiz.Shared.Helpers;
+
+namespace Quiz.WebAPI.Controllers;
+
+[ApiController]
+[Route("api/v1/teachers")]
+[Authorize(Policy = "Teacher")]
+public class TeacherController(
+    ITeacherService teacherService) : ControllerBase
+{
+    [HttpGet("review")]
+    [ProducesResponseType<ExamReviewResponseDto>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetExamsToBeReviewed()
+    {
+        Guid userId = User.GetUserIdFromClaims();
+
+        var response = await teacherService.GetExamsToBeReviewed(userId);
+
+        return Ok(response);
+    }
+}

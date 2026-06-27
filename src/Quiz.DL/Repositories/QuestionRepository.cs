@@ -182,25 +182,74 @@ public class QuestionRepository(
                 new
                 {
                     submission.UserId,
-                    submission.GroupId
+                    submission.GroupId,
+                    UnderReview = submission.ShortAnswers.Any() ? true : false,
                 },
                 transaction);
 
-            IEnumerable<object> answers = submission.Questions.Select(x =>
-                new
-                {
-                    submission.UserId,
-                    x.QuestionId,
-                    x.QuestionType,
-                    x.OptionId
-                });
-
-            if (answers.Any())
+            if(submission.McqAnswers.Count > 0)
             {
-                await conn.ExecuteAsync(
-                    QuestionSqlQueries.UpsertRelUserQuestion,
-                    answers,
-                    transaction);
+                foreach(var answer in submission.McqAnswers)
+                {
+                    await conn.ExecuteAsync(
+                        QuestionSqlQueries.SubmitAnswerForMcqQuestions,
+                        new
+                        {
+                            submission.UserId,
+                            answer.QuestionId,
+                            answer.QuestionType,
+                            answer.OptionId
+                        }, transaction);
+                }
+            }
+
+            if(submission.MsqAnswers.Count > 0)
+            {
+                foreach(var answer in submission.MsqAnswers)
+                {
+                    foreach(var option in answer.OptionIds)
+                    {
+                        await conn.ExecuteAsync(
+                        QuestionSqlQueries.SubmitAnswerForMsqQuestions,
+                        new
+                        {
+                            submission.UserId,
+                            answer.QuestionId,
+                            answer.QuestionType,
+                            OptionId = option
+                        }, transaction);
+                    }
+                }
+            }
+
+            if(submission.TrueFalseAnswers.Count > 0)
+            {
+                foreach(var answer in submission.TrueFalseAnswers)
+                {
+                    await conn.ExecuteAsync(
+                        QuestionSqlQueries.SubmitAnswerForTfQuestions,
+                        new
+                        {
+                            submission.UserId,
+                            answer.QuestionId,
+                            answer.Answer
+                        }, transaction);
+                }
+            }
+
+            if(submission.TrueFalseAnswers.Count > 0)
+            {
+                foreach(var answer in submission.TrueFalseAnswers)
+                {
+                    await conn.ExecuteAsync(
+                        QuestionSqlQueries.SubmitAnswerForSaQuestions,
+                        new
+                        {
+                            submission.UserId,
+                            answer.QuestionId,
+                            answer.Answer
+                        }, transaction);
+                }
             }
 
             return 1;
