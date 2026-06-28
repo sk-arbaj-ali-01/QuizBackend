@@ -35,6 +35,8 @@ public static class GroupSqlQueries
             created_at      AS CreatedAt,
             active_for_days AS ActiveForDays
         FROM question_groups  
+        WHERE 
+            created_by = @UserId
     ";
 
     public const string GetGroupByIdQuery = @"
@@ -45,7 +47,9 @@ public static class GroupSqlQueries
         is_active       AS IsActive,
         is_archived     AS IsArchieved,
         exam_duration   AS ExamDuration,
-        active_for_days AS ActiveForDays
+        active_for_days AS ActiveForDays,
+        total_points    AS TotalPoints,
+        review_required AS ReviewRequired
     FROM question_groups
     WHERE group_id = @GroupId
     ";

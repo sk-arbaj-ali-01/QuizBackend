@@ -22,11 +22,11 @@ public class GroupService(
         await groupRepository.CreateGroup(entity);
     }
 
-    public async Task<PaginatedResponse<GroupResponseDto>> GetGroups(GroupRequestDto reqDto)
+    public async Task<PaginatedResponse<GroupResponseDto>> GetGroups(GroupRequestDto reqDto, Guid userId)
     {
         GroupParameter parameter = reqDto.ConvertToParameter();
 
-        PagedRecordModel<GroupResponseDto> records = await groupRepository.GetGroups(parameter);
+        PagedRecordModel<GroupResponseDto> records = await groupRepository.GetGroups(parameter, userId);
 
         return ToPaginatedResponse(reqDto, records.Records, records.TotalCount);
     }

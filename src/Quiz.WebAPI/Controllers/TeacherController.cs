@@ -22,4 +22,17 @@ public class TeacherController(
 
         return Ok(response);
     }
+
+    [HttpGet("group/{groupId:guid}/student/{studentId:guid}")]
+    [ProducesResponseType<IEnumerable<ShortAnswerQuestionsResponseDto>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetShortAnswerQuestionsForReview(
+        Guid groupId,
+        Guid studentId)
+    {
+        Guid userId = User.GetUserIdFromClaims();
+
+        var response = await teacherService.GetShortAnswerQuestionsForReview(groupId, studentId);
+
+        return Ok(response);
+    }
 }

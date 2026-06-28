@@ -9,7 +9,7 @@ public interface IGroupRepository
 {
     Task CreateGroup(GroupEntity entity);
 
-    Task<PagedRecordModel<GroupResponseDto>> GetGroups(GroupParameter parameter);
+    Task<PagedRecordModel<GroupResponseDto>> GetGroups(GroupParameter parameter, Guid userId);
 
     Task<GroupResponseDto> GetGroupById(Guid groupId);
 

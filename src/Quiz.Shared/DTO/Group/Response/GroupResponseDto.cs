@@ -13,6 +13,10 @@ public class GroupResponseDto
 
     public int ExamDuration { get; set; }
 
+    public int TotalPoints { get; set; }
+
+    public bool ReviewRequired { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public int ActiveForDays { get; set; }

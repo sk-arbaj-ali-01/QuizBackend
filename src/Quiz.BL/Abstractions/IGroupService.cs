@@ -7,7 +7,7 @@ public interface IGroupService
 {
     Task CreateGroup(GroupCreateRequestDto reqDto, string userId);
 
-    Task<PaginatedResponse<GroupResponseDto>> GetGroups(GroupRequestDto reqDto);
+    Task<PaginatedResponse<GroupResponseDto>> GetGroups(GroupRequestDto reqDto, Guid userId);
 
     Task<GroupResponseDto> GetGroupById(Guid groupId);
 

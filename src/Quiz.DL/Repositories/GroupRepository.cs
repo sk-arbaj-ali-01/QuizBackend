@@ -26,10 +26,11 @@ public class GroupRepository(
                 entity));
     }
 
-    public async Task<PagedRecordModel<GroupResponseDto>> GetGroups(GroupParameter parameter)
+    public async Task<PagedRecordModel<GroupResponseDto>> GetGroups(GroupParameter parameter, Guid userId)
     {
         DynamicParameters dynamicParameters;
         string sqlQuery = BuildQuery(parameter, out dynamicParameters);
+        dynamicParameters.Add("UserId", userId);
 
         IEnumerable<GroupResponseDto> results =
             await DbOperation(async conn =>
