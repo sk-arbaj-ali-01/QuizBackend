@@ -117,15 +117,15 @@ public static class QuestionSqlQueries
         INSERT INTO rel_user_groups
         (
             user_id,
-            group_id
+            group_id,
+            under_review
         )
         VALUES
         (
             @UserId,
-            @GroupId
+            @GroupId,
+            @UnderReview
         )
-        ON DUPLICATE KEY UPDATE
-            assigned_at = assigned_at;
     ";
 
     public const string UpsertRelUserQuestion = @"
@@ -316,10 +316,71 @@ public static class QuestionSqlQueries
     ";
 
     public const string UpdatePointsForGroupWhileCreatingTheQuestions = @"
-        UPDATE TABLE question_groups
+        UPDATE question_groups
         SET
-            table_points = @TotalPoints
+            total_points = @TotalPoints
         WHERE
             group_id = @GroupId
+    ";
+
+    public const string SubmitAnswerForMcqQuestions = @"
+        INSERT INTO `rel_user_answers_for_mcq_or_msq`
+        (
+            `user_id`,
+            `question_id`,
+            `question_type`,
+            `option_id`
+        )
+        VALUES
+        (
+            @UserId,
+            @QuestionId,
+            @QuestionType,
+            @OptionId
+        )
+    ";
+    public const string SubmitAnswerForMsqQuestions = @"
+        INSERT INTO `rel_user_answers_for_mcq_or_msq`
+        (
+            `user_id`,
+            `question_id`,
+            `question_type`,
+            `option_id`
+        )
+        VALUES
+        (
+            @UserId,
+            @QuestionId,
+            @QuestionType,
+            @OptionId
+        )
+    ";
+    public const string SubmitAnswerForTfQuestions = @"
+        INSERT INTO `rel_user_answers_for_true_false`
+        (
+            `user_id`,
+            `question_id`,
+            `answer`
+        )
+        VALUES
+        (
+            @UserId,
+            @QuestionId,
+            @Answer
+        )
+    ";
+    public const string SubmitAnswerForSaQuestions = @"
+        INSERT INTO `rel_user_answers_for_short_answer`
+        (
+            `user_id`,
+            `question_id`,
+            `answer_text`
+        )
+        VALUES
+        (
+            @UserId,
+            @QuestionId,
+            @Answer
+        )
     ";
 }

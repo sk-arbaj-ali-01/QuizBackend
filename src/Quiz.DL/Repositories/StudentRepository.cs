@@ -26,4 +26,19 @@ public class StudentRepository(
 
         return response;
     }
+
+    public async Task<IEnumerable<AttemptedQuizzesResponseDto>> GetAttemptedQuizzes(Guid userId)
+    {
+        IEnumerable<AttemptedQuizzesResponseDto> response =
+            await DbOperation(async conn =>
+                await conn.QueryAsync<AttemptedQuizzesResponseDto>(
+                    StudentSqlQueries.GetAttemptedQuizzes,
+                    new
+                    {
+                        UserId = userId
+                    })
+                );
+
+        return response;
+    }
 }

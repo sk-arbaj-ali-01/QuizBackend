@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Quiz.BL.Abstractions;
 using Quiz.Shared.DTO.Question.Request;
 using Quiz.Shared.DTO.Question.Response;
+using Quiz.Shared.Helpers;
 
 namespace Quiz.WebAPI.Controllers;
 
@@ -26,17 +27,6 @@ public class QuestionController(
     public async Task<IActionResult> UpdateQuestions([FromBody] QuestionUpdateRequestDto questionUpdateRequestDto)
     {
         await questionService.UpdateQuestions(questionUpdateRequestDto);
-
-        return NoContent();
-    }
-
-    [HttpPost("submit-answers")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> SubmitAnswers(
-        [FromBody] QuestionSubmitAnswersRequestDto requestDto,
-        [FromHeader(Name = "x-user-id")] Guid userId)
-    {
-        await questionService.SubmitAnswers(requestDto, userId);
 
         return NoContent();
     }

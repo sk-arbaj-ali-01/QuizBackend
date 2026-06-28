@@ -13,4 +13,9 @@ public class StudentService(
     {
         return await studentRepository.GetGroupsFroStudents(studentId);
     }
+
+    public async Task<IEnumerable<AttemptedQuizzesResponseDto>> GetAttemptedQuizzes(Guid studentId)
+    {
+        return await studentRepository.GetAttemptedQuizzes(studentId);
+    }
 }

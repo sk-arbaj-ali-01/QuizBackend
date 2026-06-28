@@ -5,4 +5,5 @@ public interface IStudentService
 {
     Task<IEnumerable<GroupsForStudentsResponseDto>> GetGroupsFroStudents(Guid studentId);
 
+    Task<IEnumerable<AttemptedQuizzesResponseDto>> GetAttemptedQuizzes(Guid studentId);
 }
