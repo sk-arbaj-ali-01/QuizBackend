@@ -13,7 +13,8 @@ namespace Quiz.WebAPI.Controllers;
 [Authorize(Policy = "Student")]
 public class StudentController(
     IStudentService studentService,
-    IQuestionService questionService)
+    IQuestionService questionService,
+    IResultService resultService)
     : ControllerBase
 {
     
@@ -51,5 +52,15 @@ public class StudentController(
             await studentService.GetAttemptedQuizzes(userId);
 
         return Ok(responses);
+    }
+
+    [HttpGet("report/{groupId:Guid}")]
+    public async Task<IActionResult> GetStudentReportCard([FromRoute] Guid groupId)
+    {
+        Guid userId = User.GetUserIdFromClaims();
+
+        byte[] generatedPdf = await resultService.GetExamReport(userId, groupId);
+
+        return Ok(File(generatedPdf, "application/pdf", "student-report"));
     }
 }

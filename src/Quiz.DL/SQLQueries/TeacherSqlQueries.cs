@@ -20,4 +20,24 @@ public static class TeacherSqlQueries
 		where
 			qg.created_by = @UserId
     ";
+
+	public const string GetShortAnswerQuestionByGroupId = @"
+		select 
+			saq.question_id				as QuestionId,
+			saq.text					as QuestionText,
+			saq.points					as Points
+		from short_answer_questions saq
+		where 
+			saq.question_group_id = @GroupId
+	";
+
+	public const string GetShortAnswersByStudentId = @"
+		select
+			ruafsa.question_id				as QuestionId,
+			ruafsa.answer_text				as AnswerText
+		from rel_user_answers_for_short_answer ruafsa
+		where
+			ruafsa.question_id in (@QuestionIds)
+			and ruafsa.user_id = @StudentId
+	";
 }

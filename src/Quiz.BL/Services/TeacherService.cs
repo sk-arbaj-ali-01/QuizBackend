@@ -13,4 +13,11 @@ public class TeacherService(
     {
         return await teacherRepository.GetExamsToBeReviewed(userId);
     }
+
+    public async Task<IEnumerable<ShortAnswerQuestionsResponseDto>> GetShortAnswerQuestionsForReview(
+        Guid groupId,
+        Guid studentId)
+    {
+        return await teacherRepository.GetShortAnswerQuestionsForReview(groupId, studentId);
+    }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Quiz.BL.Abstractions;
 using Quiz.Shared.DTO.Group.Request;
 using Quiz.Shared.DTO.Group.Response;
+using Quiz.Shared.Helpers;
 using Quiz.Shared.Models;
 using System.Security.Claims;
 
@@ -34,8 +35,10 @@ public class GroupController(
     [ProducesResponseType<PaginatedResponse<GroupResponseDto>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetGroups([FromQuery] GroupRequestDto requestDto)
     {
+        Guid userId = User.GetUserIdFromClaims();
+
         PaginatedResponse<GroupResponseDto> response = 
-            await groupService.GetGroups(requestDto);
+            await groupService.GetGroups(requestDto, userId);
 
         return Ok(response);
     }
