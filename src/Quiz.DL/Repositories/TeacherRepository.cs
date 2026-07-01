@@ -2,9 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Quiz.DL.Abstractions;
+using Quiz.DL.Entities;
 using Quiz.DL.Service;
 using Quiz.DL.SQLQueries;
 using Quiz.Shared.DTO.Teacher.Response;
+using System.Transactions;
 
 namespace Quiz.DL.Repositories;
 public class TeacherRepository(
@@ -61,5 +63,35 @@ public class TeacherRepository(
         }
 
         return answersForReview;
+    }
+
+    public async Task SubmitReviewResult(ReviewResultEntity reqEntity, Guid userId)
+    {
+        foreach(var item in reqEntity.Submission)
+        {
+            await DbOperationInTransaction(async (conn, transaction) =>
+            {
+                await conn.ExecuteAsync(
+                    TeacherSqlQueries.UpdateStudentResultForShortAnswer,
+                    new
+                    {
+                        item.IsCorrect,
+                        item.QuestionId,
+                        reqEntity.StudentId
+                    },
+                    transaction
+                );
+
+                await conn.ExecuteAsync(
+                    TeacherSqlQueries.UpdateGroupStatusForStudentSubmittedData,
+                    new
+                    {
+                        reqEntity.StudentId,
+                        reqEntity.GroupId
+                    }, transaction);
+
+                return Task.CompletedTask;
+            });
+        }
     }
 }

@@ -40,4 +40,22 @@ public static class TeacherSqlQueries
 			ruafsa.question_id in (@QuestionIds)
 			and ruafsa.user_id = @StudentId
 	";
+
+	public const string UpdateStudentResultForShortAnswer = @"
+		update rel_user_answers_for_short_answer
+		set
+		  is_correct = @IsCorrect
+		where
+		  user_id = @StudentId
+		  and question_id = @QuestionId
+	";
+
+	public const string UpdateGroupStatusForStudentSubmittedData = @"
+		update rel_user_groups
+		set
+		  under_review = FALSE
+		where
+		  user_id = @StudentId
+		  and group_id = @GroupId
+	";
 }

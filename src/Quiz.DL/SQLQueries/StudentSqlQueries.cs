@@ -7,14 +7,22 @@ public static class StudentSqlQueries
             QG.group_name               AS GroupName,
             QG.description              AS Description,
             QG.exam_duration            AS ExamDuration,
-            QG.total_points             AS TotalPoints
+            QG.total_points             AS TotalPoints,
+            U.full_name                 AS TeacherName
         FROM rel_student_teacher RST
         LEFT JOIN question_groups QG
             ON RST.teacher_id = QG.created_by
+        LEFT JOIN users U
+            ON QG.created_by = U.user_id
         WHERE
             RST.student_id = @UserId
             AND QG.is_active = TRUE
             AND QG.is_archived = FALSE
+            AND QG.group_id NOT IN (
+                SELECT group_id
+                FROM rel_user_groups
+                WHERE user_id = @UserId
+            )
     ";
 
     public const string GetAttemptedQuizzes = @"

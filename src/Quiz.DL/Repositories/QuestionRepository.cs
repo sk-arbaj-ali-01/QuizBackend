@@ -237,9 +237,9 @@ public class QuestionRepository(
                 }
             }
 
-            if(submission.TrueFalseAnswers.Count > 0)
+            if(submission.ShortAnswers.Count > 0)
             {
-                foreach(var answer in submission.TrueFalseAnswers)
+                foreach(var answer in submission.ShortAnswers)
                 {
                     await conn.ExecuteAsync(
                         QuestionSqlQueries.SubmitAnswerForSaQuestions,
@@ -250,6 +250,13 @@ public class QuestionRepository(
                             answer.Answer
                         }, transaction);
                 }
+
+                await conn.ExecuteAsync(QuestionSqlQueries.UpdateGroupInfoUnderReviewStatus,
+                    new
+                    {
+                        submission.UserId,
+                        submission.GroupId
+                    }, transaction);
             }
 
             return 1;

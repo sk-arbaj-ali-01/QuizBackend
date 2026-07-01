@@ -113,37 +113,19 @@ public static class FooterComponent
             .BorderTop(1).BorderColor(Colors.Border)
             .Background(Colors.White)
             .Padding(10).PaddingHorizontal(24)
-            .Row(row =>
+            .Column(col =>
             {
-                row.AutoItem().AlignMiddle()
+                col.Item().AlignCenter()
                     .Text("ACADEMIC ASSESSMENT AUTHORITY")
                     .FontSize(FontSizes.Label)
                     .Bold()
                     .FontColor(Colors.LightGray)
                     .LetterSpacing(1);
 
-                row.RelativeItem().AlignMiddle().PaddingLeft(20).Row(nav =>
-                {
-                    foreach (var link in new[] { "Privacy Policy", "Verification Portal", "Support" })
-                    {
-                        nav.AutoItem().PaddingRight(16)
-                            .Text(link)
-                            .FontSize(FontSizes.Label)
-                            .FontColor(Colors.Gray);
-                    }
-                });
-
-                row.AutoItem().AlignMiddle().Column(c =>
-                {
-                    c.Item().AlignRight()
-                        .Text("© 2024 Academic Assessment Authority.")
-                        .FontSize(FontSizes.Label)
-                        .FontColor(Colors.LightGray);
-                    c.Item().AlignRight()
-                        .Text("All rights reserved. Confidential Professional Report.")
-                        .FontSize(FontSizes.Label)
-                        .FontColor(Colors.LightGray);
-                });
+                col.Item().AlignCenter()
+                    .Text("© 2024 Academic Assessment Authority. All rights reserved.")
+                    .FontSize(FontSizes.Label)
+                    .FontColor(Colors.LightGray);
             });
     }
 }

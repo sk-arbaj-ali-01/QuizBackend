@@ -383,4 +383,13 @@ public static class QuestionSqlQueries
             @Answer
         )
     ";
+
+    public const string UpdateGroupInfoUnderReviewStatus = @"
+        UPDATE rel_user_groups
+        SET
+            under_review = TRUE
+        WHERE
+            user_id = @UserId
+            AND group_id = @GroupId
+    ";
 }

@@ -61,6 +61,6 @@ public class StudentController(
 
         byte[] generatedPdf = await resultService.GetExamReport(userId, groupId);
 
-        return Ok(File(generatedPdf, "application/pdf", "student-report"));
+        return File(generatedPdf, "application/pdf", "student-report");
     }
 }
