@@ -246,6 +246,8 @@ public class ResultService(
     private byte[] GeneratePdfReport(ExamReportData report)
     {
         QuestPDF.Settings.License = LicenseType.Community;
+        QuestPDF.Settings.EnableDebugging = true;
+
         var document = new ExamReportDocument(report);
 
         return document.GeneratePdf();

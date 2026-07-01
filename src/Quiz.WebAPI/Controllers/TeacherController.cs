@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Quiz.BL.Abstractions;
+using Quiz.Shared.DTO.Teacher.Request;
 using Quiz.Shared.DTO.Teacher.Response;
 using Quiz.Shared.Helpers;
 
@@ -34,5 +35,16 @@ public class TeacherController(
         var response = await teacherService.GetShortAnswerQuestionsForReview(groupId, studentId);
 
         return Ok(response);
+    }
+
+    [HttpPut("submit-result")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> SubmitReviewResult([FromBody] ReviewResultRequestDto reqDto)
+    {
+        Guid userId = User.GetUserIdFromClaims();
+
+        await teacherService.SubmitReviewResult(reqDto, userId);
+
+        return Ok();
     }
 }

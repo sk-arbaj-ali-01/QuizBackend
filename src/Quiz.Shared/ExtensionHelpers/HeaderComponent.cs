@@ -11,46 +11,18 @@ public static class HeaderComponent
             .Background(Colors.White)
             .BorderBottom(1).BorderColor(Colors.Border)
             .Padding(12).PaddingHorizontal(24)
-            .Row(row =>
+            .Column(col =>
             {
-                row.AutoItem()
-                    .AlignMiddle()
+                col.Item()
                     .Text("Exam Analysis Pro")
                     .FontSize(FontSizes.Large)
                     .Bold()
                     .FontColor(Colors.DarkGreen);
 
-                row.RelativeItem()
-                    .AlignMiddle()
-                    .PaddingLeft(24)
-                    .Row(nav =>
-                    {
-                        foreach (var (label, active) in new[]
-                        {
-                            ("Dashboard", true),
-                            ("Detailed Report", false),
-                            ("Performance Metrics", false),
-                            ("Syllabus Coverage", false),
-                        })
-                        {
-                            nav.AutoItem()
-                                .PaddingRight(20)
-                                .AlignMiddle()
-                                .Text(label)
-                                .FontSize(FontSizes.Body)
-                                .FontColor(active ? Colors.DarkGreen : Colors.Gray)
-                                .SemiBold();
-                        }
-                    });
-
-                row.AutoItem()
-                    .AlignMiddle()
-                    .Background(Colors.DarkGreen)
-                    .Padding(7).PaddingHorizontal(14)
-                    .Text("⬇  Download PDF")
+                col.Item().PaddingTop(4)
+                    .Text("Dashboard • Detailed Report • Performance Metrics • Syllabus Coverage")
                     .FontSize(FontSizes.Small)
-                    .Bold()
-                    .FontColor(Colors.White);
+                    .FontColor(Colors.Gray);
             });
     }
 
@@ -62,7 +34,6 @@ public static class HeaderComponent
             .Padding(20)
             .Row(row =>
             {
-                // Left: exam info
                 row.RelativeItem().Column(col =>
                 {
                     col.Item()
@@ -115,7 +86,6 @@ public static class HeaderComponent
                     });
                 });
 
-                // Right: grade card
                 row.AutoItem()
                     .Width(130)
                     .Border(1).BorderColor(Colors.Border)
@@ -137,13 +107,14 @@ public static class HeaderComponent
                             .Bold()
                             .FontColor(Colors.DarkText);
 
-                        // Progress bar
-                        float pct = (float)data.ReceivedPoints / data.TotalPoints;
+                        var safeTotalPoints = data.TotalPoints <= 0 ? 1 : data.TotalPoints;
+                        var pct = Math.Clamp((float)data.ReceivedPoints / safeTotalPoints, 0f, 1f);
+
                         col.Item().PaddingTop(6).Column(bar =>
                         {
                             bar.Item().Height(5).Background(Colors.Border).Column(inner =>
                                 inner.Item()
-                                    .Width(pct * 110)   // 110 ≈ inner width after padding
+                                    .Width(pct * 110)
                                     .Height(5)
                                     .Background(Colors.AccentGreen));
                         });

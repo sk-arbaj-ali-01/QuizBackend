@@ -1,6 +1,4 @@
-﻿
-
-using QuestPDF.Fluent;
+﻿using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using Quiz.Shared.Models;
 
@@ -18,47 +16,39 @@ public static class QuestionComponent
             .Background(Colors.White)
             .Column(col =>
             {
-                // ── Main body row ──────────────────────────────────────────
-                col.Item().Padding(16).Row(row =>
+                col.Item().Padding(16).Column(main =>
                 {
-                    // Left: question + options
-                    row.RelativeItem().Column(left =>
+                    main.Item().Row(r =>
                     {
-                        // Type badge row
-                        left.Item().Row(r =>
-                        {
-                            r.AutoItem()
-                                .Background(Colors.ExtraLightGray)
-                                .Border(1).BorderColor(Colors.Border)
-                                .Padding(3).PaddingHorizontal(6)
-                                .Text($"QUESTION {q.Number} • {q.Type}")
-                                .FontSize(FontSizes.Label)
-                                .FontColor(Colors.Gray);
+                        r.AutoItem()
+                            .Background(Colors.ExtraLightGray)
+                            .Border(1).BorderColor(Colors.Border)
+                            .Padding(3).PaddingHorizontal(6)
+                            .Text($"QUESTION {q.Number} • {q.Type}")
+                            .FontSize(FontSizes.Label)
+                            .FontColor(Colors.Gray);
 
-                            r.AutoItem().PaddingLeft(6)
-                                .Background(badgeBg)
-                                .Border(1).BorderColor(badgeColor)
-                                .Padding(3).PaddingHorizontal(6)
-                                .Text(q.IsCorrect ? "CORRECT" : "WRONG")
-                                .FontSize(FontSizes.Label)
-                                .Bold()
-                                .FontColor(badgeColor);
-                        });
-
-                        // Question text
-                        left.Item().PaddingTop(8)
-                            .Text(q.QuestionText)
-                            .FontSize(FontSizes.Normal)
-                            .SemiBold();
-
-                        // Type-specific rendering
-                        left.Item().PaddingTop(8).ComposeOptions(q);
+                        r.AutoItem().PaddingLeft(6)
+                            .Background(badgeBg)
+                            .Border(1).BorderColor(badgeColor)
+                            .Padding(3).PaddingHorizontal(6)
+                            .Text(q.IsCorrect ? "CORRECT" : "WRONG")
+                            .FontSize(FontSizes.Label)
+                            .Bold()
+                            .FontColor(badgeColor);
                     });
 
-                    // Right panel: selection summary
-                    row.AutoItem()
-                        .Width(155)
-                        .PaddingLeft(16)
+                    main.Item().PaddingTop(8)
+                        .Text(q.QuestionText)
+                        .FontSize(FontSizes.Normal)
+                        .SemiBold();
+
+                    main.Item().PaddingTop(8).ComposeOptions(q);
+
+                    main.Item().PaddingTop(12)
+                        .Border(1).BorderColor(Colors.Border)
+                        .Background(Colors.ExtraLightGray)
+                        .Padding(10)
                         .Column(right =>
                         {
                             right.Item()
@@ -67,7 +57,7 @@ public static class QuestionComponent
                                 .FontColor(Colors.Gray)
                                 .LetterSpacing(1);
 
-                            if (q.Type == "SHORT ANSWER")
+                            if (q.Type == "SA")
                             {
                                 right.Item()
                                     .PaddingTop(2)
@@ -101,7 +91,6 @@ public static class QuestionComponent
                                     .FontSize(FontSizes.Small)
                                     .FontColor(Colors.BodyText);
 
-                            // Verdict
                             right.Item()
                                 .PaddingTop(10)
                                 .Text(q.IsCorrect ? "[CORRECT]" : "[WRONG]")
@@ -116,8 +105,7 @@ public static class QuestionComponent
                         });
                 });
 
-                // ── Banner: explanation / review tip (not for SHORT ANSWER) ──
-                if (!string.IsNullOrWhiteSpace(q.StudentAnswer) && q.Type != "SHORT ANSWER")
+                if (!string.IsNullOrWhiteSpace(q.StudentAnswer) && q.Type != "SA")
                 {
                     col.Item()
                         .BorderLeft(3).BorderColor(borderColor)
@@ -143,11 +131,11 @@ public static class QuestionComponent
     {
         switch (q.Type)
         {
-            case "SHORT ANSWER":
+            case "SA":
                 ComposeShortAnswer(container, q);
                 break;
 
-            case "TRUE/FALSE":
+            case "TF":
                 ComposeTrueFalse(container, q);
                 break;
 
@@ -249,7 +237,6 @@ public static class QuestionComponent
                             .Padding(6).PaddingHorizontal(10)
                             .Row(r =>
                             {
-                                // Checkbox box
                                 r.AutoItem()
                                     .Width(11).Height(11)
                                     .Border(1)
@@ -261,7 +248,7 @@ public static class QuestionComponent
                                     .Bold()
                                     .FontColor(Colors.White);
 
-                                r.AutoItem().PaddingLeft(6)
+                                r.RelativeItem().PaddingLeft(6)
                                     .AlignMiddle()
                                     .Text(item.opt)
                                     .FontSize(FontSizes.Body)
@@ -270,7 +257,6 @@ public static class QuestionComponent
                             });
                     }
 
-                    // Fill empty column if odd number of options in last row
                     if (group.Count() == 1)
                         row.RelativeItem();
                 });
@@ -278,7 +264,6 @@ public static class QuestionComponent
         });
     }
 
-    // MCQ ── radio-style stacked list
     private static void ComposeMCQ(IContainer container, ExamQuestion q)
     {
         container.Column(col =>
@@ -306,7 +291,6 @@ public static class QuestionComponent
                     .Padding(6).PaddingHorizontal(10)
                     .Row(row =>
                     {
-                        // Radio indicator
                         row.AutoItem()
                             .Width(12).Height(12)
                             .Border(1)
@@ -317,7 +301,8 @@ public static class QuestionComponent
                             .FontSize(6)
                             .FontColor(selected ? Colors.White : Colors.LightGray);
 
-                        row.AutoItem().PaddingLeft(8).AlignMiddle()
+                        row.RelativeItem().PaddingLeft(8)
+                            .AlignMiddle()
                             .Text(opt)
                             .FontSize(FontSizes.Body)
                             .FontColor(textColor)

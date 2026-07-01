@@ -10,4 +10,6 @@ public class GroupsForStudentsResponseDto
     public int ExamDuration { get; set; }
 
     public int TotalPoints { get; set; }
+
+    public string TeacherName { get; set; } = string.Empty;
 }

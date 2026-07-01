@@ -159,7 +159,7 @@ public class ResultRepository(
 
         studentAnswers.ShortAnswers = await DbOperation(async conn =>
             await conn.QueryAsync<StudentShortAnswersResponseDto>(
-                ResultSqlQueries.GetShortAnswerQuestionsByGroupId,
+                ResultSqlQueries.GetShortAnswerSubmissionDataByUserId,
                 new
                 {
                     UserId = userId,
