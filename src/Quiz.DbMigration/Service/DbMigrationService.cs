@@ -13,7 +13,7 @@ public class DbMigrationService(
     public int UpgradeDatabase()
     {
         string connectionString = ValidateConnectionString();
-        EnsureDatabase.For.MySqlDatabase(connectionString);
+        //EnsureDatabase.For.MySqlDatabase(connectionString);
 
         UpgradeEngine upgrader = DeployChanges.To
             .MySqlDatabase(connectionString)

@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Constants\" />
     <Folder Include="DTO\Student\Request\" />
+    <Folder Include="ExtensionHelpers\" />
   </ItemGroup>
 
   <ItemGroup>
