@@ -63,7 +63,7 @@ public static class ResultSqlQueries
 			ruafmm.option_id				as OptionId
 		from rel_user_answers_for_mcq_or_msq ruafmm
 		where 
-			ruafmm.question_id IN (@QuestionIds)
+			ruafmm.question_id IN @QuestionIds
 			AND ruafmm.user_id = @UserId
 	";
 

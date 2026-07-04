@@ -115,7 +115,7 @@ public class ResultRepository(
                 new
                 {
                     UserId = userId,
-                    QuestionIds = mcqQuestionIds,
+                    QuestionIds = mcqQuestionIds.ToArray(),
                 }));
 
         Dictionary<Guid, StudentMsqAnswersResponseDto> _answerDict = new();
