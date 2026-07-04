@@ -4,7 +4,7 @@ using QuestPDF.Infrastructure;
 using Quiz.BL.Abstractions;
 using Quiz.DL.Abstractions;
 using Quiz.Shared.DTO.Result.Response;
-using Quiz.Shared.Models;
+using Quiz.Shared.Helpers;
 
 namespace Quiz.BL.Services;
 public class ResultService(
@@ -17,11 +17,11 @@ public class ResultService(
 
     public async Task<byte[]> GetExamReport(Guid userId, Guid groupId)
     {
-        ExamReportData examReportData = await CalculateResult(userId, groupId);
+        ReportData examReportData = await CalculateResult(userId, groupId);
 
         return GeneratePdfReport(examReportData);
     }
-    private async Task<ExamReportData> CalculateResult(Guid userId, Guid groupId)
+    private async Task<ReportData> CalculateResult(Guid userId, Guid groupId)
     {
         ExamQuestionsResponseDto examQuestions = 
             await resultRepository.GetExamQuestionsByGroupId(groupId);
@@ -40,7 +40,7 @@ public class ResultService(
                 tfQuestinIds,
                 saQuestinIds);
 
-        List<ExamQuestion> reportForPdf = new();
+        List<Question> reportForPdf = new();
         int totalMarksObtained = 0;
         
         foreach(var item in studentAnswers.McqAnswers)
@@ -49,6 +49,22 @@ public class ResultService(
             {
                 if(item.QuestionId == question.QuestionId)
                 {
+                    var qt = new Question
+                    {
+                        Number = 01,
+                        Type = question.QuestionType,
+                        Text = question.QuestionText,
+                        Options = question.Options.Select(x => x.OptionText).ToList()
+                    };
+
+                    foreach(var option in question.Options)
+                    {
+                        if (option.IsCorrect)
+                        {
+                            qt.CorrectAnswers = [option.OptionText];
+                        }
+                    }
+
                     foreach(var option in question.Options)
                     {
                         if(item.OptionId == option.OptionId)
@@ -56,34 +72,17 @@ public class ResultService(
                             if(option.IsCorrect == true)
                             {
                                 totalMarksObtained += question.Points;
-
-                                reportForPdf.Add(new ExamQuestion(
-                                    Number: "01",
-                                    Type: question.QuestionType.ToString(),
-                                    IsCorrect: true,
-                                    QuestionText: question.QuestionText,
-                                    Options: question.Options.Select(x => x.OptionText).ToArray(),
-                                    SelectedOptions: [option.OptionText],
-                                    CorrectOptions: [option.OptionText],
-                                    StudentAnswer: "",
-                                    PointsAwarded: question.Points,
-                                    MaxPoints: question.Points
-                                ));
+                                qt.IsCorrect = true;
+                                qt.StudentAnswers = [option.OptionText];
+                                qt.PointsAwarded = question.Points;
+                                reportForPdf.Add(qt);
                             }
                             else
                             {
-                                reportForPdf.Add(new ExamQuestion(
-                                    Number: "01",
-                                    Type: question.QuestionType.ToString(),
-                                    IsCorrect: false,
-                                    QuestionText: question.QuestionText,
-                                    Options: question.Options.Select(x => x.OptionText).ToArray(),
-                                    SelectedOptions: [option.OptionText],
-                                    CorrectOptions: [option.OptionText],
-                                    StudentAnswer: "",
-                                    PointsAwarded: 0,
-                                    MaxPoints: question.Points
-                                ));
+                                qt.IsCorrect = false;
+                                qt.StudentAnswers = [option.OptionText];
+                                qt.PointsAwarded = 0;
+                                reportForPdf.Add(qt);
                             }
                         }
                     }
@@ -108,33 +107,31 @@ public class ResultService(
                     {
                         totalMarksObtained += question.Points;
 
-                        reportForPdf.Add(new ExamQuestion(
-                            Number: "01",
-                            Type: question.QuestionType.ToString(),
-                            IsCorrect: true,
-                            QuestionText: question.QuestionText,
-                            Options: question.Options.Select(x => x.OptionText).ToArray(),
-                            SelectedOptions: question.Options.Where(x => item.OptionIds.Contains(x.OptionId)).Select(x => x.OptionText).ToArray(),
-                            CorrectOptions: question.Options.Where(x => x.IsCorrect).Select(x => x.OptionText).ToArray(),
-                            StudentAnswer: "",
-                            PointsAwarded: question.Points,
-                            MaxPoints: question.Points
-                        ));
+                        reportForPdf.Add(new Question
+                        {
+                            Number = 01,
+                            Type = question.QuestionType,
+                            Text = question.QuestionText,
+                            IsCorrect = true,
+                            Options = question.Options.Select(x => x.OptionText).ToList(),
+                            CorrectAnswers = question.Options.Where(x => x.IsCorrect).Select(x => x.OptionText).ToList(),
+                            StudentAnswers = question.Options.Where(x => item.OptionIds.Contains(x.OptionId)).Select(x => x.OptionText).ToList(),
+                            PointsAwarded = question.Points
+                        });
                     }
                     else
                     {
-                        reportForPdf.Add(new ExamQuestion(
-                            Number: "01",
-                            Type: question.QuestionType.ToString(),
-                            IsCorrect: false,
-                            QuestionText: question.QuestionText,
-                            Options: question.Options.Select(x => x.OptionText).ToArray(),
-                            SelectedOptions: question.Options.Where(x => item.OptionIds.Contains(x.OptionId)).Select(x => x.OptionText).ToArray(),
-                            CorrectOptions: question.Options.Where(x => x.IsCorrect).Select(x => x.OptionText).ToArray(),
-                            StudentAnswer: "",
-                            PointsAwarded: 0,
-                            MaxPoints: question.Points
-                        ));
+                        reportForPdf.Add(new Question
+                        {
+                            Number = 01,
+                            Type = question.QuestionType,
+                            Text = question.QuestionText,
+                            IsCorrect = false,
+                            Options = question.Options.Select(x => x.OptionText).ToList(),
+                            CorrectAnswers = question.Options.Where(x => x.IsCorrect).Select(x => x.OptionText).ToList(),
+                            StudentAnswers = question.Options.Where(x => item.OptionIds.Contains(x.OptionId)).Select(x => x.OptionText).ToList(),
+                            PointsAwarded = 0
+                        });
                     }
                 }
             }
@@ -150,33 +147,29 @@ public class ResultService(
                     {
                         totalMarksObtained += question.Points;
 
-                        reportForPdf.Add(new ExamQuestion(
-                            Number: "01",
-                            Type: question.QuestionType.ToString(),
-                            IsCorrect: true,
-                            QuestionText: question.QuestionText,
-                            Options: new[] { "True", "False" },
-                            SelectedOptions: [item.Answer ? "True" : "False"],
-                            CorrectOptions: [question.CorrectAnswer ? "True" : "False"],
-                            StudentAnswer: "",
-                            PointsAwarded: question.Points,
-                            MaxPoints: question.Points
-                        ));
+                        reportForPdf.Add(new Question
+                        {
+                            Number = 01,
+                            Type = question.QuestionType,
+                            IsCorrect = true,
+                            Text = question.QuestionText,
+                            CorrectAnswers = [question.CorrectAnswer ? "True" : "False"],
+                            StudentAnswers = [item.Answer ? "True" : "False"],
+                            PointsAwarded = question.Points
+                        });
                     }
                     else
                     {
-                        reportForPdf.Add(new ExamQuestion(
-                            Number: "01",
-                            Type: question.QuestionType.ToString(),
-                            IsCorrect: false,
-                            QuestionText: question.QuestionText,
-                            Options: new[] { "True", "False" },
-                            SelectedOptions: [item.Answer ? "True" : "False"],
-                            CorrectOptions: [question.CorrectAnswer ? "True" : "False"],
-                            StudentAnswer: "",
-                            PointsAwarded: 0,
-                            MaxPoints: question.Points
-                        ));
+                        reportForPdf.Add(new Question
+                        {
+                            Number = 01,
+                            Type = question.QuestionType,
+                            IsCorrect = false,
+                            Text = question.QuestionText,
+                            CorrectAnswers = [question.CorrectAnswer ? "True" : "False"],
+                            StudentAnswers = [item.Answer ? "True" : "False"],
+                            PointsAwarded = 0
+                        });
                     }
                 }
             }
@@ -192,33 +185,27 @@ public class ResultService(
                     {
                         totalMarksObtained += question.Points;
 
-                        reportForPdf.Add(new ExamQuestion(
-                            Number: "01",
-                            Type: question.QuestionType.ToString(),
-                            IsCorrect: true,
-                            QuestionText: question.QuestionText,
-                            Options: [],
-                            SelectedOptions: [item.AnswerText],
-                            CorrectOptions: ["Verified Correct"],
-                            StudentAnswer: "",
-                            PointsAwarded: question.Points,
-                            MaxPoints: question.Points
-                        ));
+                        reportForPdf.Add(new Question
+                        {
+                            Number = 01,
+                            Type = question.QuestionType,
+                            IsCorrect = true,
+                            Text = question.QuestionText,
+                            StudentAnswerText = item.AnswerText,
+                            PointsAwarded = question.Points
+                        });
                     }
                     else
                     {
-                        reportForPdf.Add(new ExamQuestion(
-                            Number: "01",
-                            Type: question.QuestionType.ToString(),
-                            IsCorrect: false,
-                            QuestionText: question.QuestionText,
-                            Options: [],
-                            SelectedOptions: [item.AnswerText],
-                            CorrectOptions: [],
-                            StudentAnswer: "",
-                            PointsAwarded: 0,
-                            MaxPoints: question.Points
-                        ));
+                        reportForPdf.Add(new Question
+                        {
+                            Number = 01,
+                            Type = question.QuestionType,
+                            IsCorrect = false,
+                            Text = question.QuestionText,
+                            StudentAnswerText = item.AnswerText,
+                            PointsAwarded = question.Points
+                        });
                     }
                 }
             }
@@ -227,29 +214,33 @@ public class ResultService(
         var userData = await userRepository.GetUserById(userId);
         var groupData = await groupRepository.GetGroupById(groupId);
 
-        ExamReportData report = new ExamReportData(
-            userData.FullName,
-            userData.EmailId,
-            groupData.GroupName,
-            groupData.Description,
-            "",
-            groupData.TotalPoints,
-            totalMarksObtained,
-            "",
-            "",
-            "",
-            reportForPdf);
+        ReportData report = new ReportData
+        {
+            Title = groupData.GroupName,
+            Description = groupData.Description,
+            CandidateName = userData.FullName,
+            CandidateEmail = userData.EmailId,
+            AttemptedDate = DateTime.Now,
+            TotalPoints = groupData.TotalPoints,
+            PointsReceived = totalMarksObtained,
+            Grade = "",
+            Remarks = "",
+            Questions = reportForPdf
+        };
 
         return report;
     }
 
-    private byte[] GeneratePdfReport(ExamReportData report)
+    private byte[] GeneratePdfReport(ReportData report)
     {
         QuestPDF.Settings.License = LicenseType.Community;
         QuestPDF.Settings.EnableDebugging = true;
 
-        var document = new ExamReportDocument(report);
+        // var document = new ExamReportDocument(report);
 
-        return document.GeneratePdf();
+        return Document
+        .Create(container => new StudentReportDocument(report)
+        .Compose(container))
+        .GeneratePdf();
     }
 }
