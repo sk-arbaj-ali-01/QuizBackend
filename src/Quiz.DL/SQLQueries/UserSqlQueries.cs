@@ -51,13 +51,23 @@ public static class UserSqlQueries
     ";
 
     public const string GetTeachersData = @"
+        with filtered_teacher as(
+	        select 
+		        student_id,
+		        teacher_id
+	        from rel_student_teacher
+	        where student_id = @StudentId
+        )
         SELECT
-            user_id         AS UserId,
-            full_name       AS FullName
+            U.user_id         AS UserId,
+            U.full_name       AS FullName
         FROM
-            users
-        WHERE
-            role = 'TEACHER'
+            users U
+        left join filtered_teacher FT 
+	        on U.user_id = FT.teacher_id
+        where
+            FT.teacher_id is null
+	        and U.role = 'TEACHER'
     ";
 
     public const string CreateStudentAndTeacherData = @"

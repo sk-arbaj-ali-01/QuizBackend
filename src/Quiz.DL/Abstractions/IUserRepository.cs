@@ -1,4 +1,5 @@
 using Quiz.DL.Entities;
+using Quiz.DL.Parameters;
 using Quiz.Shared.DTO.User.Response;
 using Quiz.Shared.Models;
 
@@ -11,7 +12,9 @@ public interface IUserRepository
 
     Task<UserLoginResponseDto?> Login(UserLoginEntity entity);
 
-    Task<PagedRecordModel<UserTeacherResponseDto>> GetTeachersData();
+    Task<PagedRecordModel<UserTeacherResponseDto>> GetTeachersData(
+        RelatedTeachersParameter parameter,
+        Guid userId);
 
     Task CreateRelationBetweenStudentAndTeacher(Guid studentId, Guid teacherId);
 

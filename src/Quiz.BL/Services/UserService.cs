@@ -7,6 +7,7 @@ using Quiz.BL.Abstractions;
 using Quiz.BL.DtoToEntityExtensions.User;
 using Quiz.DL.Abstractions;
 using Quiz.DL.Entities;
+using Quiz.DL.Parameters;
 using Quiz.Shared.DTO.User.Request;
 using Quiz.Shared.DTO.User.Response;
 using Quiz.Shared.Exceptions;
@@ -103,9 +104,12 @@ public class UserService(
         };
     }
 
-    public async Task<PagedRecordModel<UserTeacherResponseDto>> GetTeachersData()
+    public async Task<PagedRecordModel<UserTeacherResponseDto>> GetTeachersData(
+        RelatedTeachersRequestDto requestDto,
+        Guid userId)
     {
-        return await userRepository.GetTeachersData();
+        RelatedTeachersParameter parameter = requestDto.ConvertToParameter();
+        return await userRepository.GetTeachersData(parameter, userId);
     }
 
     public async Task CreateRelationBetweenStudentAndTeacher(Guid studentId, Guid teacherId)

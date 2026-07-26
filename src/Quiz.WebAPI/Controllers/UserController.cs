@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Quiz.BL.Abstractions;
 using Quiz.Shared.DTO.User.Request;
 using Quiz.Shared.DTO.User.Response;
+using Quiz.Shared.Helpers;
 using Quiz.Shared.Models;
 using System.Security.Claims;
 
@@ -45,10 +46,11 @@ public class UserController(
     [HttpGet("teachers")]
     [ProducesResponseType<PagedRecordModel<UserTeacherResponseDto>>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetTeachersData()
+    public async Task<IActionResult> GetTeachersData([FromQuery] RelatedTeachersRequestDto requestDto)
     {
+        Guid userId = User.GetUserIdFromClaims();
         PagedRecordModel<UserTeacherResponseDto> pagedRecords =
-            await userService.GetTeachersData();
+            await userService.GetTeachersData(requestDto, userId);
 
         return Ok(pagedRecords);
     }

@@ -11,7 +11,9 @@ public interface IUserService
 
     Task<LoginDetails> Login(UserLoginRequestDto reqDto);
 
-    Task<PagedRecordModel<UserTeacherResponseDto>> GetTeachersData();
+    Task<PagedRecordModel<UserTeacherResponseDto>> GetTeachersData(
+        RelatedTeachersRequestDto requestDto,
+        Guid userId);
 
     Task CreateRelationBetweenStudentAndTeacher(Guid studentId, Guid teacherId);
 }
